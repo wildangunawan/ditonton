@@ -21,11 +21,11 @@ class TV extends Equatable {
     required this.id,
     required this.overview,
     required this.posterPath,
-    required this.originalName,
+    required this.name,
   });
 
   String? backdropPath;
-  String? firstAirDate;
+  DateTime? firstAirDate;
   List<int>? genreIds;
   int id;
   String? name;
