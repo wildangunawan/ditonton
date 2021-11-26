@@ -47,7 +47,7 @@ class TVDetailModel extends Equatable {
     final String backdropPath;
     final List<CreatedByModel> createdBy;
     final List<int> episodeRunTime;
-    final DateTime firstAirDate;
+    final DateTime? firstAirDate;
     final List<GenreModel> genres;
     final String homepage;
     final int id;
@@ -114,7 +114,7 @@ class TVDetailModel extends Equatable {
         "backdrop_path": backdropPath,
         "created_by": List<dynamic>.from(createdBy.map((x) => x.toJson())),
         "episode_run_time": List<dynamic>.from(episodeRunTime.map((x) => x)),
-        "first_air_date": "${firstAirDate.year.toString().padLeft(4, '0')}-${firstAirDate.month.toString().padLeft(2, '0')}-${firstAirDate.day.toString().padLeft(2, '0')}",
+        "first_air_date": firstAirDate.toString().substring(0, 10),
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "homepage": homepage,
         "id": id,
@@ -181,7 +181,7 @@ class TVDetailModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         backdropPath,
         createdBy,
         episodeRunTime,

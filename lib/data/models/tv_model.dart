@@ -50,7 +50,7 @@ class TVModel extends Equatable {
 
     Map<String, dynamic> toJson() => {
         "backdrop_path": backdropPath,
-        "first_air_date": firstAirDate,
+        "first_air_date": firstAirDate.toString().substring(0, 10),
         "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
         "id": id,
         "name": name,
