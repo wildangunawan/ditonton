@@ -9,10 +9,10 @@ class ProductionCompany extends Equatable {
   });
 
   final int id;
-  final String logoPath;
+  final String? logoPath;
   final String name;
   final String originCountry;
 
   @override
-  List<Object> get props => [id, logoPath, name, originCountry];
+  List<Object?> get props => [id, logoPath, name, originCountry];
 }

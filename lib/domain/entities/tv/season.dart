@@ -14,11 +14,11 @@ class Season extends Equatable {
   final int id;
   final String name;
   final String overview;
-  final DateTime airDate;
+  final DateTime? airDate;
   final int episodeCount;
-  final String posterPath;
+  final String? posterPath;
   final int seasonNumber;
 
   @override
-  List<Object> get props => [id, name, overview, airDate, episodeCount, posterPath, seasonNumber];
+  List<Object?> get props => [id, name, overview, airDate, episodeCount, posterPath, seasonNumber];
 }
