@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/tv/spoken_language.dart';
 import 'package:equatable/equatable.dart';
 
 class SpokenLanguageModel extends Equatable {
@@ -7,9 +8,9 @@ class SpokenLanguageModel extends Equatable {
         required this.name,
     });
 
-    String englishName;
-    String iso6391;
-    String name;
+    final String englishName;
+    final String iso6391;
+    final String name;
 
     factory SpokenLanguageModel.fromJson(Map<String, dynamic> json) => SpokenLanguageModel(
         englishName: json["english_name"],
@@ -22,6 +23,14 @@ class SpokenLanguageModel extends Equatable {
         "iso_639_1": iso6391,
         "name": name,
     };
+
+    SpokenLanguage toEntity() {
+        return SpokenLanguage(
+            englishName: englishName,
+            iso6391: iso6391,
+            name: name,
+        );
+    }
 
     @override
     List<Object> get props => [englishName, iso6391, name];

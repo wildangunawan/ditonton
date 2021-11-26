@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/tv/production_country.dart';
 import 'package:equatable/equatable.dart';
 
 class ProductionCountryModel extends Equatable {
@@ -6,8 +7,8 @@ class ProductionCountryModel extends Equatable {
         required this.name,
     });
 
-    String iso31661;
-    String name;
+    final String iso31661;
+    final String name;
 
     factory ProductionCountryModel.fromJson(Map<String, dynamic> json) => ProductionCountryModel(
         iso31661: json["iso_3166_1"],
@@ -18,6 +19,13 @@ class ProductionCountryModel extends Equatable {
         "iso_3166_1": iso31661,
         "name": name,
     };
+
+    ProductionCountry toEntity() {
+        return ProductionCountry(
+            iso31661: iso31661,
+            name: name,
+        );
+    }
 
     @override
     List<Object> get props => [iso31661, name];

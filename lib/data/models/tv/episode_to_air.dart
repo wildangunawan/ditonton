@@ -1,31 +1,33 @@
+import 'package:ditonton/domain/entities/tv/episode_to_air.dart';
 import 'package:equatable/equatable.dart';
 
 class EpisodeToAirModel extends Equatable {
-    EpisodeToAirModel({
-        required this.airDate,
-        required this.episodeNumber,
-        required this.id,
-        required this.name,
-        required this.overview,
-        required this.productionCode,
-        required this.seasonNumber,
-        required this.stillPath,
-        required this.voteAverage,
-        required this.voteCount,
-    });
+  EpisodeToAirModel({
+    required this.airDate,
+    required this.episodeNumber,
+    required this.id,
+    required this.name,
+    required this.overview,
+    required this.productionCode,
+    required this.seasonNumber,
+    required this.stillPath,
+    required this.voteAverage,
+    required this.voteCount,
+  });
 
-    DateTime airDate;
-    int episodeNumber;
-    int id;
-    String name;
-    String overview;
-    String productionCode;
-    int seasonNumber;
-    dynamic stillPath;
-    int voteAverage;
-    int voteCount;
+  final DateTime airDate;
+  final int episodeNumber;
+  final int id;
+  final String name;
+  final String overview;
+  final String productionCode;
+  final int seasonNumber;
+  final dynamic stillPath;
+  final double voteAverage;
+  final int voteCount;
 
-    factory EpisodeToAirModel.fromJson(Map<String, dynamic> json) => EpisodeToAirModel(
+  factory EpisodeToAirModel.fromJson(Map<String, dynamic> json) =>
+      EpisodeToAirModel(
         airDate: DateTime.parse(json["air_date"]),
         episodeNumber: json["episode_number"],
         id: json["id"],
@@ -36,10 +38,11 @@ class EpisodeToAirModel extends Equatable {
         stillPath: json["still_path"],
         voteAverage: json["vote_average"],
         voteCount: json["vote_count"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "air_date": "${airDate.year.toString().padLeft(4, '0')}-${airDate.month.toString().padLeft(2, '0')}-${airDate.day.toString().padLeft(2, '0')}",
+  Map<String, dynamic> toJson() => {
+        "air_date":
+            "${airDate.year.toString().padLeft(4, '0')}-${airDate.month.toString().padLeft(2, '0')}-${airDate.day.toString().padLeft(2, '0')}",
         "episode_number": episodeNumber,
         "id": id,
         "name": name,
@@ -49,10 +52,24 @@ class EpisodeToAirModel extends Equatable {
         "still_path": stillPath,
         "vote_average": voteAverage,
         "vote_count": voteCount,
-    };
+      };
 
-    @override
-    List<Object> get props => [
+  EpisodeToAir toEntity() {
+    return EpisodeToAir(
+        airDate: airDate,
+        episodeNumber: episodeNumber,
+        id: id,
+        name: name,
+        overview: overview,
+        productionCode: productionCode,
+        seasonNumber: seasonNumber,
+        stillPath: stillPath,
+        voteAverage: voteAverage,
+        voteCount: voteCount);
+  }
+
+  @override
+  List<Object> get props => [
         airDate,
         episodeNumber,
         id,
@@ -63,5 +80,5 @@ class EpisodeToAirModel extends Equatable {
         stillPath,
         voteAverage,
         voteCount,
-    ];
+      ];
 }

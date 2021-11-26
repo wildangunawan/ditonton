@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/tv/created_by.dart';
 import 'package:equatable/equatable.dart';
 
 class CreatedByModel extends Equatable {
@@ -9,11 +10,11 @@ class CreatedByModel extends Equatable {
     required this.profilePath,
   });
 
-  int id;
-  String creditId;
-  String name;
-  int gender;
-  String profilePath;
+  final int id;
+  final String creditId;
+  final String name;
+  final int gender;
+  final String profilePath;
 
   factory CreatedByModel.fromJson(Map<String, dynamic> json) => CreatedByModel(
         id: json["id"],
@@ -30,6 +31,16 @@ class CreatedByModel extends Equatable {
         "gender": gender,
         "profile_path": profilePath == null ? null : profilePath,
       };
+
+  CreatedBy toEntity() {
+    return CreatedBy(
+      id: id, 
+      creditId: creditId, 
+      name: name, 
+      gender: gender, 
+      profilePath: profilePath
+    );
+  }
 
   @override
   List<Object> get props => [id, creditId, name, gender, profilePath];
