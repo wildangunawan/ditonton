@@ -180,7 +180,11 @@ class DetailContent extends StatelessWidget {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              "No of episode / season: " + tv.numberOfEpisodes.toString() + "/" + tv.numberOfSeasons.toString(),
+                              "No of episode: " + tv.numberOfEpisodes.toString(),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              "No of season: " + tv.numberOfSeasons.toString(),
                             ),
                             SizedBox(height: 16),
                             Text(
