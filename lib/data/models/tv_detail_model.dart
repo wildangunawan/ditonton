@@ -44,7 +44,7 @@ class TVDetailModel extends Equatable {
         required this.voteCount,
     });
 
-    final String backdropPath;
+    final String? backdropPath;
     final List<CreatedByModel> createdBy;
     final List<int> episodeRunTime;
     final DateTime? firstAirDate;
@@ -89,7 +89,7 @@ class TVDetailModel extends Equatable {
         lastAirDate: DateTime.parse(json["last_air_date"]),
         lastEpisodeToAir: EpisodeToAirModel.fromJson(json["last_episode_to_air"]),
         name: json["name"],
-        nextEpisodeToAir: EpisodeToAirModel.fromJson(json["next_episode_to_air"]),
+        nextEpisodeToAir: json["next_episode_to_air"] != null ? EpisodeToAirModel.fromJson(json["next_episode_to_air"]) : null,
         networks: List<NetworkModel>.from(json["networks"].map((x) => NetworkModel.fromJson(x))),
         numberOfEpisodes: json["number_of_episodes"],
         numberOfSeasons: json["number_of_seasons"],

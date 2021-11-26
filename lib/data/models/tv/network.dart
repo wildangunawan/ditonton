@@ -11,7 +11,7 @@ class NetworkModel extends Equatable {
 
     final String name;
     final int id;
-    final String logoPath;
+    final String? logoPath;
     final String originCountry;
 
     factory NetworkModel.fromJson(Map<String, dynamic> json) => NetworkModel(
@@ -38,5 +38,5 @@ class NetworkModel extends Equatable {
     }
 
     @override
-    List<Object> get props => [name, id, logoPath, originCountry];
+    List<Object?> get props => [name, id, logoPath, originCountry];
 }

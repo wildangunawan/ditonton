@@ -43,7 +43,7 @@ class TVDetail extends Equatable {
     required this.voteCount,
   });
 
-  final String backdropPath;
+  final String? backdropPath;
   final List<CreatedBy> createdBy;
   final List<int> episodeRunTime;
   final DateTime? firstAirDate;
