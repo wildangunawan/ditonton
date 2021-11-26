@@ -24,7 +24,7 @@ class NetworkModel extends Equatable {
     Map<String, dynamic> toJson() => {
         "name": name,
         "id": id,
-        "logo_path": logoPath == null ? null : logoPath,
+        "logo_path": logoPath,
         "origin_country": originCountry,
     };
 
