@@ -1,6 +1,7 @@
 import 'package:ditonton/domain/entities/tv.dart';
+import 'package:equatable/equatable.dart';
 
-class TVModel {
+class TVModel extends Equatable {
     TVModel({
         required this.backdropPath,
         required this.firstAirDate,
@@ -84,8 +85,13 @@ class TVModel {
   @override
   List<Object?> get props => [
         backdropPath,
+        firstAirDate,
         genreIds,
         id,
+        name,
+        originCountry,
+        originalLanguage,
+        originalName,
         overview,
         popularity,
         posterPath,
