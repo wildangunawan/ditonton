@@ -10,7 +10,7 @@ abstract class TVLocalDataSource {
 }
 
 class TVLocalDataSourceImpl implements TVLocalDataSource {
-  final DatabaseHelper databaseHelper;
+  final TVDatabaseHelper databaseHelper;
 
   TVLocalDataSourceImpl({required this.databaseHelper});
 
