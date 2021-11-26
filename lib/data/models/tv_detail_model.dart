@@ -7,8 +7,9 @@ import 'package:ditonton/data/models/tv/production_country.dart';
 import 'package:ditonton/data/models/tv/season.dart';
 import 'package:ditonton/data/models/tv/spoken_language.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
+import 'package:equatable/equatable.dart';
 
-class TVDetailModel {
+class TVDetailModel extends Equatable {
     TVDetailModel({
         required this.backdropPath,
         required this.createdBy,
@@ -105,7 +106,7 @@ class TVDetailModel {
         status: json["status"],
         tagline: json["tagline"],
         type: json["type"],
-        voteAverage: json["vote_average"],
+        voteAverage: json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
     );
 
@@ -178,4 +179,39 @@ class TVDetailModel {
           voteCount: voteCount,
       );
   }
+
+  @override
+  List<Object> get props => [
+        backdropPath,
+        createdBy,
+        episodeRunTime,
+        firstAirDate,
+        genres,
+        homepage,
+        id,
+        inProduction,
+        languages,
+        lastAirDate,
+        lastEpisodeToAir,
+        name,
+        nextEpisodeToAir,
+        networks,
+        numberOfEpisodes,
+        numberOfSeasons,
+        originCountry,
+        originalLanguage,
+        originalName,
+        overview,
+        popularity,
+        posterPath,
+        productionCompanies,
+        productionCountries,
+        seasons,
+        spokenLanguages,
+        status,
+        tagline,
+        type,
+        voteAverage,
+        voteCount,
+      ];
 }

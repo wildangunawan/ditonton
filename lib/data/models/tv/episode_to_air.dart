@@ -22,7 +22,7 @@ class EpisodeToAirModel extends Equatable {
   final String overview;
   final String productionCode;
   final int seasonNumber;
-  final dynamic stillPath;
+  final String? stillPath;
   final double voteAverage;
   final int voteCount;
 
@@ -36,7 +36,7 @@ class EpisodeToAirModel extends Equatable {
         productionCode: json["production_code"],
         seasonNumber: json["season_number"],
         stillPath: json["still_path"],
-        voteAverage: json["vote_average"],
+        voteAverage: json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );
 
@@ -69,7 +69,7 @@ class EpisodeToAirModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         airDate,
         episodeNumber,
         id,

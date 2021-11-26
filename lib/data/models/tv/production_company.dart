@@ -11,21 +11,21 @@ class ProductionCompanyModel extends Equatable {
 
   final String name;
   final int id;
-  final String logoPath;
+  final String? logoPath;
   final String originCountry;
 
   factory ProductionCompanyModel.fromJson(Map<String, dynamic> json) =>
       ProductionCompanyModel(
         name: json["name"],
         id: json["id"],
-        logoPath: json["logo_path"] == null ? null : json["logo_path"],
+        logoPath: json["logo_path"],
         originCountry: json["origin_country"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "id": id,
-        "logo_path": logoPath == null ? null : logoPath,
+        "logo_path": logoPath,
         "origin_country": originCountry,
       };
 
@@ -35,5 +35,5 @@ class ProductionCompanyModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [name, id, logoPath, originCountry];
+  List<Object?> get props => [name, id, logoPath, originCountry];
 }

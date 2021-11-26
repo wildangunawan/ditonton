@@ -14,14 +14,14 @@ class CreatedByModel extends Equatable {
   final String creditId;
   final String name;
   final int gender;
-  final String profilePath;
+  final String? profilePath;
 
   factory CreatedByModel.fromJson(Map<String, dynamic> json) => CreatedByModel(
         id: json["id"],
         creditId: json["credit_id"],
         name: json["name"],
         gender: json["gender"],
-        profilePath: json["profile_path"] == null ? null : json["profile_path"],
+        profilePath: json["profile_path"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -29,7 +29,7 @@ class CreatedByModel extends Equatable {
         "credit_id": creditId,
         "name": name,
         "gender": gender,
-        "profile_path": profilePath == null ? null : profilePath,
+        "profile_path": profilePath,
       };
 
   CreatedBy toEntity() {
@@ -43,5 +43,5 @@ class CreatedByModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, creditId, name, gender, profilePath];
+  List<Object?> get props => [id, creditId, name, gender, profilePath];
 }
