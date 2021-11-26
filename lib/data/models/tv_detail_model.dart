@@ -6,9 +6,10 @@ import 'package:ditonton/data/models/tv/production_company.dart';
 import 'package:ditonton/data/models/tv/production_country.dart';
 import 'package:ditonton/data/models/tv/season.dart';
 import 'package:ditonton/data/models/tv/spoken_language.dart';
+import 'package:ditonton/domain/entities/tv_detail.dart';
 
-class TVDetail {
-    TVDetail({
+class TVDetailModel {
+    TVDetailModel({
         required this.backdropPath,
         required this.createdBy,
         required this.episodeRunTime,
@@ -42,39 +43,39 @@ class TVDetail {
         required this.voteCount,
     });
 
-    String backdropPath;
-    List<CreatedByModel> createdBy;
-    List<int> episodeRunTime;
-    DateTime firstAirDate;
-    List<GenreModel> genres;
-    String homepage;
-    int id;
-    bool inProduction;
-    List<String> languages;
-    DateTime lastAirDate;
-    EpisodeToAirModel lastEpisodeToAir;
-    String name;
-    EpisodeToAirModel nextEpisodeToAir;
-    List<NetworkModel> networks;
-    int numberOfEpisodes;
-    int numberOfSeasons;
-    List<String> originCountry;
-    String originalLanguage;
-    String originalName;
-    String overview;
-    double popularity;
-    String posterPath;
-    List<ProductionCompanyModel> productionCompanies;
-    List<ProductionCountryModel> productionCountries;
-    List<SeasonModel> seasons;
-    List<SpokenLanguageModel> spokenLanguages;
-    String status;
-    String tagline;
-    String type;
-    int voteAverage;
-    int voteCount;
+    final String backdropPath;
+    final List<CreatedByModel> createdBy;
+    final List<int> episodeRunTime;
+    final DateTime firstAirDate;
+    final List<GenreModel> genres;
+    final String homepage;
+    final int id;
+    final bool inProduction;
+    final List<String> languages;
+    final DateTime lastAirDate;
+    final EpisodeToAirModel lastEpisodeToAir;
+    final String name;
+    final EpisodeToAirModel nextEpisodeToAir;
+    final List<NetworkModel> networks;
+    final int numberOfEpisodes;
+    final int numberOfSeasons;
+    final List<String> originCountry;
+    final String originalLanguage;
+    final String originalName;
+    final String overview;
+    final double popularity;
+    final String posterPath;
+    final List<ProductionCompanyModel> productionCompanies;
+    final List<ProductionCountryModel> productionCountries;
+    final List<SeasonModel> seasons;
+    final List<SpokenLanguageModel> spokenLanguages;
+    final String status;
+    final String tagline;
+    final String type;
+    final double voteAverage;
+    final int voteCount;
 
-    factory TVDetail.fromJson(Map<String, dynamic> json) => TVDetail(
+    factory TVDetailModel.fromJson(Map<String, dynamic> json) => TVDetailModel(
         backdropPath: json["backdrop_path"],
         createdBy: List<CreatedByModel>.from(json["created_by"].map((x) => CreatedByModel.fromJson(x))),
         episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
@@ -141,4 +142,40 @@ class TVDetail {
         "vote_average": voteAverage,
         "vote_count": voteCount,
     };
+
+    TVDetail toEntity() {
+      return TVDetail(
+          backdropPath: backdropPath,
+          createdBy: this.createdBy.map((x) => x.toEntity()).toList(),
+          episodeRunTime: episodeRunTime,
+          firstAirDate: firstAirDate,
+          genres: this.genres.map((genre) => genre.toEntity()).toList(),
+          homepage: homepage,
+          id: id,
+          inProduction: inProduction,
+          languages: languages,
+          lastAirDate: lastAirDate,
+          lastEpisodeToAir: lastEpisodeToAir.toEntity(),
+          name: name,
+          nextEpisodeToAir: nextEpisodeToAir.toEntity(),
+          networks: this.networks.map((network) => network.toEntity()).toList(),
+          numberOfEpisodes: numberOfEpisodes,
+          numberOfSeasons: numberOfSeasons,
+          originCountry: originCountry,
+          originalLanguage: originalLanguage,
+          originalName: originalName,
+          overview: overview,
+          popularity: popularity,
+          posterPath: posterPath,
+          productionCompanies: this.productionCompanies.map((productionCompany) => productionCompany.toEntity()).toList(),
+          productionCountries: this.productionCountries.map((productionCountry) => productionCountry.toEntity()).toList(),
+          seasons: this.seasons.map((season) => season.toEntity()).toList(),
+          spokenLanguages: this.spokenLanguages.map((spokenLanguage) => spokenLanguage.toEntity()).toList(),
+          status: status,
+          tagline: tagline,
+          type: type,
+          voteAverage: voteAverage,
+          voteCount: voteCount,
+      );
+  }
 }
