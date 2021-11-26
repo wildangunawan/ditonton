@@ -12,12 +12,12 @@ class SeasonModel extends Equatable {
         required this.seasonNumber,
     });
 
-    final DateTime airDate;
+    final DateTime? airDate;
     final int episodeCount;
     final int id;
     final String name;
     final String overview;
-    final String posterPath;
+    final String? posterPath;
     final int seasonNumber;
 
     factory SeasonModel.fromJson(Map<String, dynamic> json) => SeasonModel(
@@ -45,7 +45,7 @@ class SeasonModel extends Equatable {
     }
 
     @override
-    List<Object> get props => [
+    List<Object?> get props => [
         airDate,
         episodeCount,
         id,
