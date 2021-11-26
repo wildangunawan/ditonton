@@ -7,8 +7,8 @@ import 'package:ditonton/data/models/tv/production_country.dart';
 import 'package:ditonton/data/models/tv/season.dart';
 import 'package:ditonton/data/models/tv/spoken_language.dart';
 
-class TvDetail {
-    TvDetail({
+class TVDetail {
+    TVDetail({
         required this.backdropPath,
         required this.createdBy,
         required this.episodeRunTime,
@@ -74,7 +74,7 @@ class TvDetail {
     int voteAverage;
     int voteCount;
 
-    factory TvDetail.fromJson(Map<String, dynamic> json) => TvDetail(
+    factory TVDetail.fromJson(Map<String, dynamic> json) => TVDetail(
         backdropPath: json["backdrop_path"],
         createdBy: List<CreatedByModel>.from(json["created_by"].map((x) => CreatedByModel.fromJson(x))),
         episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
