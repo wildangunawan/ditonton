@@ -168,7 +168,7 @@ void init() {
       () => TVLocalDataSourceImpl(databaseHelper: locator()));
 
   // helper
-  locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
+  locator.registerLazySingleton<MovieDatabaseHelper>(() => MovieDatabaseHelper());
   locator.registerLazySingleton<TVDatabaseHelper>(() => TVDatabaseHelper());
 
   // external
