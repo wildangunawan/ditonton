@@ -1,11 +1,13 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
+import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/home_tv_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/popular_tvs_page.dart';
-import 'package:ditonton/presentation/pages/search_page.dart';
+import 'package:ditonton/presentation/pages/search_movie_page.dart';
+import 'package:ditonton/presentation/pages/search_tv_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tvs_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
@@ -78,11 +80,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData.dark().copyWith(
-          colorScheme: kColorScheme,
           primaryColor: kRichBlack,
-          accentColor: kMikadoYellow,
           scaffoldBackgroundColor: kRichBlack,
-          textTheme: kTextTheme,
+          textTheme: kTextTheme, colorScheme: kColorScheme.copyWith(secondary: kMikadoYellow),
         ),
         home: HomeTVPage(),
         navigatorObservers: [routeObserver],
@@ -90,6 +90,8 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/home':
               return MaterialPageRoute(builder: (_) => HomeTVPage());
+            case HomeMoviePage.ROUTE_NAME:
+              return MaterialPageRoute(builder: (_) => HomeMoviePage());
             case PopularMoviesPage.ROUTE_NAME:
               return CupertinoPageRoute(builder: (_) => PopularMoviesPage());
             case TopRatedMoviesPage.ROUTE_NAME:
@@ -100,8 +102,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) => MovieDetailPage(id: id),
                 settings: settings,
               );
-            case SearchPage.ROUTE_NAME:
-              return CupertinoPageRoute(builder: (_) => SearchPage());
+            case SearchMoviePage.ROUTE_NAME:
+              return CupertinoPageRoute(builder: (_) => SearchMoviePage());
             case WatchlistMoviesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => WatchlistMoviesPage());
             case PopularTVsPage.ROUTE_NAME:
@@ -114,8 +116,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) => TVDetailPage(id: id),
                 settings: settings,
               );
-            case SearchPage.ROUTE_NAME:
-              return CupertinoPageRoute(builder: (_) => SearchPage());
+            case SearchTVPage.ROUTE_NAME:
+              return CupertinoPageRoute(builder: (_) => SearchTVPage());
             case WatchlistTVsPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => WatchlistTVsPage());
             case AboutPage.ROUTE_NAME:
