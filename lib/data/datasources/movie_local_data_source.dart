@@ -1,5 +1,5 @@
 import 'package:ditonton/common/exception.dart';
-import 'package:ditonton/data/datasources/db/movie_database_helper.dart';
+import 'package:ditonton/data/datasources/db/database_helper.dart';
 import 'package:ditonton/data/models/movie_table.dart';
 
 abstract class MovieLocalDataSource {
@@ -10,14 +10,14 @@ abstract class MovieLocalDataSource {
 }
 
 class MovieLocalDataSourceImpl implements MovieLocalDataSource {
-  final MovieDatabaseHelper databaseHelper;
+  final DatabaseHelper databaseHelper;
 
   MovieLocalDataSourceImpl({required this.databaseHelper});
 
   @override
   Future<String> insertWatchlist(MovieTable movie) async {
     try {
-      await databaseHelper.insertWatchlist(movie);
+      await databaseHelper.insertMovieWatchlist(movie);
       return 'Added to Watchlist';
     } catch (e) {
       throw DatabaseException(e.toString());
@@ -27,7 +27,7 @@ class MovieLocalDataSourceImpl implements MovieLocalDataSource {
   @override
   Future<String> removeWatchlist(MovieTable movie) async {
     try {
-      await databaseHelper.removeWatchlist(movie);
+      await databaseHelper.removeMovieWatchlist(movie);
       return 'Removed from Watchlist';
     } catch (e) {
       throw DatabaseException(e.toString());
