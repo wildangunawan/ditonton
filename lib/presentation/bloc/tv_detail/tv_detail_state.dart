@@ -9,6 +9,7 @@ abstract class TvDetailState extends Equatable {
 
 class Empty extends TvDetailState {}
 class Loading extends TvDetailState {}
+class HasData extends TvDetailState {}
 
 class Error extends TvDetailState {
   final String message;
@@ -19,11 +20,12 @@ class Error extends TvDetailState {
   List<Object> get props => [message];
 }
 
-class HasData extends TvDetailState {
-  final TVDetail data;
 
-  HasData(this.data);
+class Success extends TvDetailState {
+  final String message;
+
+  Success(this.message);
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [message];
 }
