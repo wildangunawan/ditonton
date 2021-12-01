@@ -55,8 +55,7 @@ void main() {
           .thenAnswer((_) async => Right(testTVDetail));
       when(mockGetTVRecommendations.execute(1))
           .thenAnswer((_) async => Right(testTVList));
-      when(mockGetTVWatchListStatus.execute(1))
-          .thenAnswer((_) async => false);
+      when(mockGetTVWatchListStatus.execute(1)).thenAnswer((_) async => false);
       return bloc;
     },
     act: (bloc) => bloc.add(LoadTvDetail(1)),
@@ -77,8 +76,7 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
       when(mockGetTVRecommendations.execute(1))
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
-      when(mockGetTVWatchListStatus.execute(1))
-          .thenAnswer((_) async => false);
+      when(mockGetTVWatchListStatus.execute(1)).thenAnswer((_) async => false);
       return bloc;
     },
     act: (bloc) => bloc.add(LoadTvDetail(1)),
@@ -92,83 +90,83 @@ void main() {
     },
   );
 
-  blocTest<TvDetailBloc, TvDetailState>(
-    'Should emit [Loading, Success] when watchlist saved successfully',
-    build: () {
-      when(mockSaveTVWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Right('Success'));
-      when(mockGetTVWatchListStatus.execute(1))
-          .thenAnswer((_) async => true);
-      return bloc;
-    },
-    act: (bloc) => bloc.add(AddTvToWatchlist(testTVDetail)),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Success('Success'),
-    ],
-    verify: (bloc) {
-      verify(mockSaveTVWatchlist.execute(testTVDetail));
-    },
-  );
+  test(
+      'Should have isWatchlist == true and watchlistMessage == success message when watchlist is saved successfully',
+      () async {
+    // Arrange
+    when(mockSaveTVWatchlist.execute(testTVDetail)).thenAnswer(
+        (_) async => Right(TvDetailBloc.watchlistAddSuccessMessage));
+    when(mockGetTVWatchListStatus.execute(testTVDetail.id))
+        .thenAnswer((_) async => true);
 
-  blocTest<TvDetailBloc, TvDetailState>(
-    'Should emit [Loading, Error] when watchlist failed to be saved',
-    build: () {
-      when(mockSaveTVWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
-      when(mockGetTVWatchListStatus.execute(1))
-          .thenAnswer((_) async => false);
-      return bloc;
-    },
-    act: (bloc) => bloc.add(AddTvToWatchlist(testTVDetail)),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Failed'),
-    ],
-    verify: (bloc) {
-      verify(mockSaveTVWatchlist.execute(testTVDetail));
-    },
-  );
+    // Act
+    bloc.add(AddTvToWatchlist(testTVDetail));
 
-  blocTest<TvDetailBloc, TvDetailState>(
-    'Should emit [Loading, Success] when watchlist removed successfully',
-    build: () {
-      when(mockRemoveTVWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Right('Success'));
-      when(mockGetTVWatchListStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => true);
-      return bloc;
-    },
-    act: (bloc) => bloc.add(RemoveTvFromWatchlist(testTVDetail)),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Success('Success'),
-    ],
-    verify: (bloc) {
-      verify(mockRemoveTVWatchlist.execute(testTVDetail));
-    },
-  );
+    // Wait to make sure bloc is done processing
+    final _ = await bloc.stream.first;
 
-  blocTest<TvDetailBloc, TvDetailState>(
-    'Should emit [Loading, Error] when watchlist failed to be removed',
-    build: () {
-      when(mockRemoveTVWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
-      when(mockGetTVWatchListStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => false);
-      return bloc;
-    },
-    act: (bloc) => bloc.add(RemoveTvFromWatchlist(testTVDetail)),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Failed'),
-    ],
-    verify: (bloc) {
-      verify(mockRemoveTVWatchlist.execute(testTVDetail));
-    },
-  );
+    // Assert
+    expect(bloc.isWatchlist, true);
+    expect(bloc.watchlistMessage, TvDetailBloc.watchlistAddSuccessMessage);
+  });
+
+  test(
+      'Should have isWatchlist == false and watchlistMessage == Failed when watchlist failed to be saved',
+      () async {
+    // Arrange
+    when(mockSaveTVWatchlist.execute(testTVDetail))
+        .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+    when(mockGetTVWatchListStatus.execute(testTVDetail.id))
+        .thenAnswer((_) async => false);
+
+    // Act
+    bloc.add(AddTvToWatchlist(testTVDetail));
+
+    // Wait to make sure bloc is done processing
+    final _ = await bloc.stream.first;
+
+    // Assert
+    expect(bloc.isWatchlist, false);
+    expect(bloc.watchlistMessage, "Failed");
+  });
+
+  test(
+      'Should have isWatchlist == false and watchlistMessage == success message when watchlist is removed successfully',
+      () async {
+    // Arrange
+    when(mockRemoveTVWatchlist.execute(testTVDetail)).thenAnswer(
+        (_) async => Right(TvDetailBloc.watchlistRemoveSuccessMessage));
+    when(mockGetTVWatchListStatus.execute(testTVDetail.id))
+        .thenAnswer((_) async => false);
+
+    // Act
+    bloc.add(RemoveTvFromWatchlist(testTVDetail));
+
+    // Wait to make sure bloc is done processing
+    final _ = await bloc.stream.first;
+
+    // Assert
+    expect(bloc.isWatchlist, false);
+    expect(bloc.watchlistMessage, TvDetailBloc.watchlistRemoveSuccessMessage);
+  });
+
+  test(
+      'Should have isWatchlist == true and watchlistMessage == Failed when watchlist failed to be removed',
+      () async {
+    // Arrange
+    when(mockRemoveTVWatchlist.execute(testTVDetail))
+        .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
+    when(mockGetTVWatchListStatus.execute(testTVDetail.id))
+        .thenAnswer((_) async => false);
+
+    // Act
+    bloc.add(RemoveTvFromWatchlist(testTVDetail));
+
+    // Wait to make sure bloc is done processing
+    final _ = await bloc.stream.first;
+
+    // Assert
+    expect(bloc.isWatchlist, true);
+    expect(bloc.watchlistMessage, "Failed");
+  });
 }

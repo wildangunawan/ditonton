@@ -12,6 +12,9 @@ part 'tv_detail_event.dart';
 part 'tv_detail_state.dart';
 
 class TvDetailBloc extends Bloc<TvDetailEvent, TvDetailState> {
+  static const watchlistAddSuccessMessage = 'Added to Watchlist';
+  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
+
   final GetTVDetail _getTvDetail;
   final GetTVRecommendations _getTvRecommendations;
   final SaveTVWatchlist _saveTvWatchlist;
@@ -26,6 +29,9 @@ class TvDetailBloc extends Bloc<TvDetailEvent, TvDetailState> {
 
   bool _isWatchlist = false;
   bool get isWatchlist => _isWatchlist;
+
+  String _watchlistMessage = '';
+  String get watchlistMessage => _watchlistMessage;
 
   TvDetailBloc(
       this._getTvDetail,
@@ -52,45 +58,48 @@ class TvDetailBloc extends Bloc<TvDetailEvent, TvDetailState> {
         emit(Error(failure.message));
       }, (data) => _recommendations = data);
 
+      final watchlist = await _getTvWatchListStatus.execute(id);
+      _isWatchlist = watchlist;
+
       if (success) emit(HasData());
     });
 
     on<AddTvToWatchlist>((event, emit) async {
-      final tv = event.tv;
+      bool success = true;
 
-      emit(Loading());
+      final tv = event.tv;
       final result = await _saveTvWatchlist.execute(tv);
 
-      await result.fold(
-        (failure) async {
-          emit(Error(failure.message));
-        },
-        (successMessage) async {
-          emit(Success(successMessage));
-        },
+      result.fold(
+        (failure) => {success = false, _watchlistMessage = failure.message},
+        (successMessage) => _watchlistMessage = successMessage,
       );
+
+      if (success)
+        _isWatchlist = true;
+      else
+        _isWatchlist = false;
+
+      emit(AddSuccess());
     });
 
     on<RemoveTvFromWatchlist>((event, emit) async {
-      final tv = event.tv;
+      bool success = true;
 
-      emit(Loading());
+      final tv = event.tv;
       final result = await _removeTvWatchlist.execute(tv);
 
-      await result.fold(
-        (failure) async {
-          emit(Error(failure.message));
-        },
-        (successMessage) async {
-          emit(Success(successMessage));
-        },
+      result.fold(
+        (failure) => {success = false, _watchlistMessage = failure.message},
+        (successMessage) => _watchlistMessage = successMessage,
       );
-    });
 
-    on<LoadWatchlistStatus>((event, emit) async {
-      final tv = event.id;
-      final result = await _getTvWatchListStatus.execute(tv);
-      _isWatchlist = result;
+      if (success)
+        _isWatchlist = false;
+      else
+        _isWatchlist = true;
+
+      emit(RemoveSuccess());
     });
   }
 }

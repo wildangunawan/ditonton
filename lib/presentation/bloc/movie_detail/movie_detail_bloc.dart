@@ -12,6 +12,9 @@ part 'movie_detail_event.dart';
 part 'movie_detail_state.dart';
 
 class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
+  static const watchlistAddSuccessMessage = 'Added to Watchlist';
+  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
+
   final GetMovieDetail _getMovieDetail;
   final GetMovieRecommendations _getMovieRecommendations;
   final SaveWatchlist _saveWatchlist;
@@ -26,6 +29,9 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
 
   bool _isWatchlist = false;
   bool get isWatchlist => _isWatchlist;
+
+  String _watchlistMessage = '';
+  String get watchlistMessage => _watchlistMessage;
 
   MovieDetailBloc(
     this._getMovieDetail,
@@ -52,45 +58,48 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
         emit(Error(failure.message));
       }, (data) => _recommendations = data);
 
+      final watchlist = await _getWatchListStatus.execute(id);
+      _isWatchlist = watchlist;
+
       if (success) emit(HasData());
     });
 
     on<AddMovieToWatchlist>((event, emit) async {
-      final movie = event.movie;
+      bool success = true;
 
-      emit(Loading());
+      final movie = event.movie;
       final result = await _saveWatchlist.execute(movie);
 
-      await result.fold(
-        (failure) async {
-          emit(Error(failure.message));
-        },
-        (successMessage) async {
-          emit(Success(successMessage));
-        },
+      result.fold(
+        (failure) => {success = false, _watchlistMessage = failure.message},
+        (successMessage) => _watchlistMessage = successMessage,
       );
+
+      if (success)
+        _isWatchlist = true;
+      else
+        _isWatchlist = false;
+
+      emit(AddSuccess());
     });
 
     on<RemoveMovieFromWatchlist>((event, emit) async {
-      final movie = event.movie;
+      bool success = true;
 
-      emit(Loading());
+      final movie = event.movie;
       final result = await _removeWatchlist.execute(movie);
 
-      await result.fold(
-        (failure) async {
-          emit(Error(failure.message));
-        },
-        (successMessage) async {
-          emit(Success(successMessage));
-        },
+      result.fold(
+        (failure) => {success = false, _watchlistMessage = failure.message},
+        (successMessage) => _watchlistMessage = successMessage,
       );
-    });
 
-    on<LoadWatchlistStatus>((event, emit) async {
-      final movie = event.id;
-      final result = await _getWatchListStatus.execute(movie);
-      _isWatchlist = result;
+      if (success)
+        _isWatchlist = false;
+      else
+        _isWatchlist = true;
+
+      emit(RemoveSuccess());
     });
   }
 }

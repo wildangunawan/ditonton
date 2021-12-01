@@ -8,7 +8,9 @@ abstract class MovieDetailState extends Equatable {
 }
 
 class Empty extends MovieDetailState {}
+
 class Loading extends MovieDetailState {}
+
 class HasData extends MovieDetailState {}
 
 class Error extends MovieDetailState {
@@ -20,12 +22,6 @@ class Error extends MovieDetailState {
   List<Object> get props => [message];
 }
 
+class AddSuccess extends MovieDetailState {}
 
-class Success extends MovieDetailState {
-  final String message;
-
-  Success(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
+class RemoveSuccess extends MovieDetailState {}
