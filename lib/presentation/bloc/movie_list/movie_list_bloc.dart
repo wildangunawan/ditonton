@@ -26,34 +26,30 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
     this._getNowPlayingMovies,
     this._getTopRatedMovies,
   ) : super(Empty()) {
-    on<LoadPopularMovieList>((event, emit) async {
-      emit(Loading());
-      final result = await _getPopularMovies.execute();
+    on<LoadMovieList>((event, emit) async {
+      bool success = true;
 
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _popularMovies = r;
-      });
-    });
-    
-    on<LoadNowPlayingMovieList>((event, emit) async {
       emit(Loading());
-      final result = await _getNowPlayingMovies.execute();
+      final popular = await _getPopularMovies.execute();
+      final nowPlaying = await _getNowPlayingMovies.execute();
+      final topRated = await _getTopRatedMovies.execute();
 
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _nowPlayingMovies = r;
-      });
-    });
-    
-    on<LoadTopRatedMovieList>((event, emit) async {
-      emit(Loading());
-      final result = await _getTopRatedMovies.execute();
+      popular.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _popularMovies = r);
 
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _topRatedMovies = r;
-      });
+      nowPlaying.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _nowPlayingMovies = r);
+
+      topRated.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _topRatedMovies = r);
+
+      if (success) emit(HasData());
     });
   }
 }

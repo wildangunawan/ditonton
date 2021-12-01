@@ -27,7 +27,8 @@ void main() {
     mockGetPopularMovies = MockGetPopularMovies();
     mockGetTopRatedMovies = MockGetTopRatedMovies();
     mockGetNowPlayingMovies = MockGetNowPlayingMovies();
-    bloc = MovieListBloc(mockGetPopularMovies, mockGetNowPlayingMovies, mockGetTopRatedMovies);
+    bloc = MovieListBloc(
+        mockGetPopularMovies, mockGetNowPlayingMovies, mockGetTopRatedMovies);
   });
 
   test('initial state is correct', () {
@@ -39,9 +40,13 @@ void main() {
     build: () {
       when(mockGetPopularMovies.execute())
           .thenAnswer((_) async => Right(testMovieList));
+      when(mockGetNowPlayingMovies.execute())
+          .thenAnswer((_) async => Right(testMovieList));
+      when(mockGetTopRatedMovies.execute())
+          .thenAnswer((_) async => Right(testMovieList));
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadPopularMovieList()),
+    act: (bloc) => bloc.add(LoadMovieList()),
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
@@ -49,6 +54,8 @@ void main() {
     ],
     verify: (bloc) {
       verify(mockGetPopularMovies.execute());
+      verify(mockGetNowPlayingMovies.execute());
+      verify(mockGetTopRatedMovies.execute());
     },
   );
 
@@ -57,9 +64,13 @@ void main() {
     build: () {
       when(mockGetPopularMovies.execute())
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
+      when(mockGetNowPlayingMovies.execute())
+          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
+      when(mockGetTopRatedMovies.execute())
+          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadPopularMovieList()),
+    act: (bloc) => bloc.add(LoadMovieList()),
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
@@ -67,77 +78,7 @@ void main() {
     ],
     verify: (bloc) {
       verify(mockGetPopularMovies.execute());
-    },
-  );
-
-  blocTest<MovieListBloc, MovieListState>(
-    'Should emit [Loading, HasData] when data is loaded successfully',
-    build: () {
-      when(mockGetNowPlayingMovies.execute())
-          .thenAnswer((_) async => Right(testMovieList));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadNowPlayingMovieList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      HasData(),
-    ],
-    verify: (bloc) {
       verify(mockGetNowPlayingMovies.execute());
-    },
-  );
-
-  blocTest<MovieListBloc, MovieListState>(
-    'Should emit [Loading, Error] when data is failed to load',
-    build: () {
-      when(mockGetNowPlayingMovies.execute())
-          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadNowPlayingMovieList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Server Failure'),
-    ],
-    verify: (bloc) {
-      verify(mockGetNowPlayingMovies.execute());
-    },
-  );
-
-  blocTest<MovieListBloc, MovieListState>(
-    'Should emit [Loading, HasData] when data is loaded successfully',
-    build: () {
-      when(mockGetTopRatedMovies.execute())
-          .thenAnswer((_) async => Right(testMovieList));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadTopRatedMovieList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      HasData(),
-    ],
-    verify: (bloc) {
-      verify(mockGetTopRatedMovies.execute());
-    },
-  );
-
-  blocTest<MovieListBloc, MovieListState>(
-    'Should emit [Loading, Error] when data is failed to load',
-    build: () {
-      when(mockGetTopRatedMovies.execute())
-          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadTopRatedMovieList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Server Failure'),
-    ],
-    verify: (bloc) {
       verify(mockGetTopRatedMovies.execute());
     },
   );

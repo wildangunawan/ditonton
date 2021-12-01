@@ -27,7 +27,8 @@ void main() {
     mockGetPopularTVs = MockGetPopularTVs();
     mockGetTopRatedTVs = MockGetTopRatedTVs();
     mockGetNowPlayingTVs = MockGetNowPlayingTVs();
-    bloc = TvListBloc(mockGetNowPlayingTVs, mockGetPopularTVs, mockGetTopRatedTVs);
+    bloc =
+        TvListBloc(mockGetNowPlayingTVs, mockGetPopularTVs, mockGetTopRatedTVs);
   });
 
   test('initial state is correct', () {
@@ -39,9 +40,13 @@ void main() {
     build: () {
       when(mockGetPopularTVs.execute())
           .thenAnswer((_) async => Right(testTVList));
+      when(mockGetTopRatedTVs.execute())
+          .thenAnswer((_) async => Right(testTVList));
+      when(mockGetNowPlayingTVs.execute())
+          .thenAnswer((_) async => Right(testTVList));
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadPopularTVList()),
+    act: (bloc) => bloc.add(LoadTVList()),
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
@@ -49,6 +54,8 @@ void main() {
     ],
     verify: (bloc) {
       verify(mockGetPopularTVs.execute());
+      verify(mockGetTopRatedTVs.execute());
+      verify(mockGetNowPlayingTVs.execute());
     },
   );
 
@@ -57,9 +64,13 @@ void main() {
     build: () {
       when(mockGetPopularTVs.execute())
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
+      when(mockGetTopRatedTVs.execute())
+          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
+      when(mockGetNowPlayingTVs.execute())
+          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
       return bloc;
     },
-    act: (bloc) => bloc.add(LoadPopularTVList()),
+    act: (bloc) => bloc.add(LoadTVList()),
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
@@ -67,78 +78,8 @@ void main() {
     ],
     verify: (bloc) {
       verify(mockGetPopularTVs.execute());
-    },
-  );
-
-  blocTest<TvListBloc, TvListState>(
-    'Should emit [Loading, HasData] when data is loaded successfully',
-    build: () {
-      when(mockGetNowPlayingTVs.execute())
-          .thenAnswer((_) async => Right(testTVList));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadNowPlayingTVList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      HasData(),
-    ],
-    verify: (bloc) {
-      verify(mockGetNowPlayingTVs.execute());
-    },
-  );
-
-  blocTest<TvListBloc, TvListState>(
-    'Should emit [Loading, Error] when data is failed to load',
-    build: () {
-      when(mockGetNowPlayingTVs.execute())
-          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadNowPlayingTVList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Server Failure'),
-    ],
-    verify: (bloc) {
-      verify(mockGetNowPlayingTVs.execute());
-    },
-  );
-
-  blocTest<TvListBloc, TvListState>(
-    'Should emit [Loading, HasData] when data is loaded successfully',
-    build: () {
-      when(mockGetTopRatedTVs.execute())
-          .thenAnswer((_) async => Right(testTVList));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadTopRatedTVList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      HasData(),
-    ],
-    verify: (bloc) {
       verify(mockGetTopRatedTVs.execute());
-    },
-  );
-
-  blocTest<TvListBloc, TvListState>(
-    'Should emit [Loading, Error] when data is failed to load',
-    build: () {
-      when(mockGetTopRatedTVs.execute())
-          .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
-      return bloc;
-    },
-    act: (bloc) => bloc.add(LoadTopRatedTVList()),
-    wait: const Duration(milliseconds: 100),
-    expect: () => [
-      Loading(),
-      Error('Server Failure'),
-    ],
-    verify: (bloc) {
-      verify(mockGetTopRatedTVs.execute());
+      verify(mockGetNowPlayingTVs.execute());
     },
   );
 }

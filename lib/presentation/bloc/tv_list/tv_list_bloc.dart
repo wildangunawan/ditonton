@@ -23,34 +23,30 @@ class TvListBloc extends Bloc<TvListEvent, TvListState> {
 
   TvListBloc(this._getNowPlayingTVs, this._getPopularTVs, this._getTopRatedTVs)
       : super(Empty()) {
-    on<LoadPopularTVList>((event, emit) async {
+    on<LoadTVList>((event, emit) async {
+      bool success = true;
+
       emit(Loading());
-      final result = await _getPopularTVs.execute();
+      final popular = await _getPopularTVs.execute();
+      final nowPlaying = await _getNowPlayingTVs.execute();
+      final topRated = await _getTopRatedTVs.execute();
 
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _popularTVs = r;
-      });
-    });
+      popular.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _popularTVs = r);
 
-    on<LoadNowPlayingTVList>((event, emit) async {
-      emit(Loading());
-      final result = await _getNowPlayingTVs.execute();
+      nowPlaying.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _nowPlayingTVs = r);
 
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _nowPlayingTVs = r;
-      });
-    });
+      topRated.fold((l) {
+        success = false;
+        emit(Error(l.message));
+      }, (r) => _topRatedTVs = r);
 
-    on<LoadTopRatedTVList>((event, emit) async {
-      emit(Loading());
-      final result = await _getTopRatedTVs.execute();
-
-      result.fold((l) => emit(Error(l.message)), (r) {
-        emit(HasData());
-        _topRatedTVs = r;
-      });
+      if (success) emit(HasData());
     });
   }
 }
