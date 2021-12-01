@@ -16,15 +16,6 @@ class LoadTvDetail extends TvDetailEvent {
   List<Object> get props => [id];
 }
 
-class LoadTvRecommendations extends TvDetailEvent {
-  final int id;
-
-  LoadTvRecommendations(this.id);
-
-  @override
-  List<Object> get props => [id];
-}
-
 class AddTvToWatchlist extends TvDetailEvent {
   final TVDetail tv;
 

@@ -28,38 +28,31 @@ class TvDetailBloc extends Bloc<TvDetailEvent, TvDetailState> {
   bool get isWatchlist => _isWatchlist;
 
   TvDetailBloc(
-    this._getTvDetail, 
-    this._getTvRecommendations,
-    this._saveTvWatchlist, 
-    this._removeTvWatchlist, 
-    this._getTvWatchListStatus
-  ) : super(Empty()) {
+      this._getTvDetail,
+      this._getTvRecommendations,
+      this._saveTvWatchlist,
+      this._removeTvWatchlist,
+      this._getTvWatchListStatus)
+      : super(Empty()) {
     on<LoadTvDetail>((event, emit) async {
       final id = event.id;
+      bool success = true;
 
       emit(Loading());
       final result = await _getTvDetail.execute(id);
+      final recommendations = await _getTvRecommendations.execute(id);
 
-      result.fold(
-          (failure) => emit(Error(failure.message)), 
-          (data) {
-            emit(HasData());
-            _tv = data;
-          });
-    });
+      result.fold((failure) {
+        success = false;
+        emit(Error(failure.message));
+      }, (data) => _tv = data);
 
-    on<LoadTvRecommendations>((event, emit) async {
-      final id = event.id;
+      recommendations.fold((failure) {
+        success = false;
+        emit(Error(failure.message));
+      }, (data) => _recommendations = data);
 
-      emit(Loading());
-      final result = await _getTvRecommendations.execute(id);
-
-      result.fold(
-          (failure) => emit(Error(failure.message)), 
-          (data) {
-            emit(HasData());
-            _recommendations = data;
-          });
+      if (success) emit(HasData());
     });
 
     on<AddTvToWatchlist>((event, emit) async {

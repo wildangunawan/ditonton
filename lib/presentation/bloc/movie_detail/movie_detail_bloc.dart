@@ -36,30 +36,23 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
   ) : super(Empty()) {
     on<LoadMovieDetail>((event, emit) async {
       final id = event.id;
+      bool success = true;
 
       emit(Loading());
       final result = await _getMovieDetail.execute(id);
+      final recommendations = await _getMovieRecommendations.execute(id);
 
-      result.fold(
-          (failure) => emit(Error(failure.message)), 
-          (data) {
-            emit(HasData());
-            _movie = data;
-          });
-    });
-    
-    on<LoadMovieRecommendations>((event, emit) async {
-      final id = event.id;
+      result.fold((failure) {
+        success = false;
+        emit(Error(failure.message));
+      }, (data) => _movie = data);
 
-      emit(Loading());
-      final result = await _getMovieRecommendations.execute(id);
+      recommendations.fold((failure) {
+        success = false;
+        emit(Error(failure.message));
+      }, (data) => _recommendations = data);
 
-      result.fold(
-          (failure) => emit(Error(failure.message)), 
-          (data) {
-            emit(HasData());
-            _recommendations = data;
-          });
+      if (success) emit(HasData());
     });
 
     on<AddMovieToWatchlist>((event, emit) async {

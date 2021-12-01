@@ -16,15 +16,6 @@ class LoadMovieDetail extends MovieDetailEvent {
   List<Object> get props => [id];
 }
 
-class LoadMovieRecommendations extends MovieDetailEvent {
-  final int id;
-
-  LoadMovieRecommendations(this.id);
-
-  @override
-  List<Object> get props => [id];
-}
-
 class LoadWatchlistStatus extends MovieDetailEvent {
   final int id;
 
