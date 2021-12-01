@@ -30,8 +30,7 @@ class _WatchlistTVsPageState extends State<WatchlistTVsPage> with RouteAware {
   }
 
   void didPopNext() {
-    Provider.of<WatchlistTVNotifier>(context, listen: false)
-        .fetchWatchlistTVs();
+    watchlistTvBloc.add(LoadWatchlistTv());
   }
 
   @override
