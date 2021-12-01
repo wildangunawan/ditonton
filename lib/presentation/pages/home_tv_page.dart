@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/presentation/bloc/tv_list/tv_list_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
@@ -9,12 +10,10 @@ import 'package:ditonton/presentation/pages/search_tv_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tvs_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_tvs_page.dart';
-import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeTVPage extends StatefulWidget {
   static const ROUTE_NAME = '/home';
@@ -24,14 +23,13 @@ class HomeTVPage extends StatefulWidget {
 }
 
 class _HomeTVPageState extends State<HomeTVPage> {
+  late TvListBloc tvListBloc;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-        () => Provider.of<TVListNotifier>(context, listen: false)
-          ..fetchNowPlayingTVs()
-          ..fetchPopularTVs()
-          ..fetchTopRatedTVs());
+    tvListBloc = BlocProvider.of<TvListBloc>(context);
+    tvListBloc.add(LoadTVList());
   }
 
   @override
@@ -99,60 +97,39 @@ class _HomeTVPageState extends State<HomeTVPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Now Playing',
-                style: kHeading6,
-              ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.nowPlayingState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.nowPlayingTVs);
-                } else {
-                  return Text('Failed');
-                }
-              }),
-              _buildSubHeading(
-                title: 'Popular',
-                onTap: () =>
-                    Navigator.pushNamed(context, PopularTVsPage.ROUTE_NAME),
-              ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.popularTVsState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.popularTVs);
-                } else {
-                  return Text('Failed');
-                }
-              }),
-              _buildSubHeading(
-                title: 'Top Rated',
-                onTap: () =>
-                    Navigator.pushNamed(context, TopRatedTVsPage.ROUTE_NAME),
-              ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.topRatedTVsState;
-                if (state == RequestState.Loading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return TVList(data.topRatedTVs);
-                } else {
-                  return Text('Failed');
-                }
-              }),
-            ],
+          child: BlocBuilder<TvListBloc, TvListState>(
+            builder: (context, state) {
+              if (state is Loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is HasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Now Playing',
+                      style: kHeading6,
+                    ),
+                    TVList(tvListBloc.nowPlayingTVs),
+                    _buildSubHeading(
+                      title: 'Popular',
+                      onTap: () => Navigator.pushNamed(
+                          context, PopularTVsPage.ROUTE_NAME),
+                    ),
+                    TVList(tvListBloc.popularTVs),
+                    _buildSubHeading(
+                      title: 'Top Rated',
+                      onTap: () => Navigator.pushNamed(
+                          context, TopRatedTVsPage.ROUTE_NAME),
+                    ),
+                    TVList(tvListBloc.topRatedTVs),
+                  ],
+                );
+              } else {
+                return Text('Failed');
+              }
+            },
           ),
         ),
       ),
