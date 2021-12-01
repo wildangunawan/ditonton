@@ -45,7 +45,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testTVList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetPopularTVs.execute());
@@ -81,7 +81,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testTVList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetNowPlayingTVs.execute());
@@ -117,7 +117,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testTVList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedTVs.execute());

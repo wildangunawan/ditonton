@@ -19,11 +19,4 @@ class Error extends MovieListState {
   List<Object> get props => [message];
 }
 
-class HasData extends MovieListState {
-  final List<Movie> data;
-
-  HasData(this.data);
-
-  @override
-  List<Object> get props => [data];
-}
+class HasData extends MovieListState {}

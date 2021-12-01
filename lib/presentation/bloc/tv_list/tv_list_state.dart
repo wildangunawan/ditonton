@@ -19,11 +19,4 @@ class Error extends TvListState {
   List<Object> get props => [message];
 }
 
-class HasData extends TvListState {
-  final List<TV> data;
-
-  HasData(this.data);
-
-  @override
-  List<Object> get props => [data];
-}
+class HasData extends TvListState {}

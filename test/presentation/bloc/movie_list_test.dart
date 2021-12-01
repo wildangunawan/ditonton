@@ -45,7 +45,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testMovieList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetPopularMovies.execute());
@@ -81,7 +81,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testMovieList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetNowPlayingMovies.execute());
@@ -117,7 +117,7 @@ void main() {
     wait: const Duration(milliseconds: 100),
     expect: () => [
       Loading(),
-      HasData(testMovieList),
+      HasData(),
     ],
     verify: (bloc) {
       verify(mockGetTopRatedMovies.execute());
