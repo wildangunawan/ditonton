@@ -25,7 +25,7 @@ void main() {
   });
 
   blocTest<SearchMovieBloc, SearchMovieState>(
-    'Should emit [Loading, HasData] when data is gotten successfully',
+    'Should emit [Loading, HasData] when data is loaded successfully',
     build: () {
       when(mock.execute("spiderman"))
           .thenAnswer((_) async => Right(testMovieList));
@@ -43,7 +43,7 @@ void main() {
   );
 
   blocTest<SearchMovieBloc, SearchMovieState>(
-    'Should emit [Loading, Error] when data is gotten successfully',
+    'Should emit [Loading, Error] when data failed to be loaded',
     build: () {
       when(mock.execute("spiderman"))
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));

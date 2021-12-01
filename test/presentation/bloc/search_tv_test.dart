@@ -25,7 +25,7 @@ void main() {
   });
 
   blocTest<SearchTvBloc, SearchTvState>(
-    'Should emit [Loading, HasData] when data is gotten successfully',
+    'Should emit [Loading, HasData] when data is loaded successfully',
     build: () {
       when(mock.execute("the l word"))
           .thenAnswer((_) async => Right(testTVList));
@@ -43,7 +43,7 @@ void main() {
   );
 
   blocTest<SearchTvBloc, SearchTvState>(
-    'Should emit [Loading, Error] when data is gotten successfully',
+    'Should emit [Loading, Error] when data failed to be loaded',
     build: () {
       when(mock.execute("the l word"))
           .thenAnswer((_) async => Left(ServerFailure("Server Failure")));
