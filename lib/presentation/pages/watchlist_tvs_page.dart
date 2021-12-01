@@ -1,8 +1,10 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/bloc/watchlist_tv/watchlist_tv_bloc.dart';
 import 'package:ditonton/presentation/provider/watchlist_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class WatchlistTVsPage extends StatefulWidget {
@@ -12,14 +14,14 @@ class WatchlistTVsPage extends StatefulWidget {
   _WatchlistTVsPageState createState() => _WatchlistTVsPageState();
 }
 
-class _WatchlistTVsPageState extends State<WatchlistTVsPage>
-    with RouteAware {
+class _WatchlistTVsPageState extends State<WatchlistTVsPage> with RouteAware {
+  late WatchlistTvBloc watchlistTvBloc;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistTVNotifier>(context, listen: false)
-            .fetchWatchlistTVs());
+    watchlistTvBloc = BlocProvider.of<WatchlistTvBloc>(context);
+    watchlistTvBloc.add(LoadWatchlistTv());
   }
 
   @override
@@ -41,24 +43,29 @@ class _WatchlistTVsPageState extends State<WatchlistTVsPage>
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistTVNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
+        child: BlocBuilder<WatchlistTvBloc, WatchlistTvState>(
+          builder: (context, state) {
+            if (state is Loading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.watchlistState == RequestState.Loaded) {
+            } else if (state is HasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.watchlistTVs[index];
+                  final tv = state.data[index];
                   return TVCard(tv);
                 },
-                itemCount: data.watchlistTVs.length,
+                itemCount: state.data.length,
+              );
+            } else if (state is Error) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
               );
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text("Failed"),
               );
             }
           },

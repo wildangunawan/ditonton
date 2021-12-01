@@ -1,7 +1,9 @@
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/popular_tv/popular_tv_bloc.dart';
 import 'package:ditonton/presentation/provider/popular_tvs_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class PopularTVsPage extends StatefulWidget {
@@ -12,12 +14,13 @@ class PopularTVsPage extends StatefulWidget {
 }
 
 class _PopularTVsPageState extends State<PopularTVsPage> {
+  late PopularTvBloc popularTvBloc;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<PopularTVsNotifier>(context, listen: false)
-            .fetchPopularTVs());
+    popularTvBloc = BlocProvider.of<PopularTvBloc>(context);
+    popularTvBloc.add(LoadPopularTV());
   }
 
   @override
@@ -28,24 +31,29 @@ class _PopularTVsPageState extends State<PopularTVsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<PopularTVsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<PopularTvBloc, PopularTvState>(
+          builder: (context, state) {
+            if (state is Loading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is HasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.tvs[index];
+                  final tv = state.data[index];
                   return TVCard(tv);
                 },
-                itemCount: data.tvs.length,
+                itemCount: state.data.length,
+              );
+            } else if (state is Error) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
               );
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text("Failed"),
               );
             }
           },
